@@ -1,14 +1,12 @@
+const _ = require("lodash");
+
 module.exports = {
   siteMetadata: {
-    title: `Gatsby Starter Blog`,
-    author: {
-      name: `Kyle Mathews`,
-      summary: `who lives and works in San Francisco building useful things.`,
-    },
-    description: `A starter blog demonstrating what Gatsby can do.`,
-    siteUrl: `https://gatsbystarterblogsource.gatsbyjs.io/`,
+    title: `Sur-Ron parts and upgrades reviews`,
+    description: `Honest reviews, articles and guides for Sur-Ron parts and upgrades`,
+    siteUrl: `https://surron.parts/`,
     social: {
-      twitter: `kylemathews`,
+
     },
   },
   plugins: [
@@ -16,8 +14,8 @@ module.exports = {
     {
       resolve: `gatsby-source-filesystem`,
       options: {
-        path: `${__dirname}/content/blog`,
-        name: `blog`,
+        path: `${__dirname}/content/posts`,
+        name: `posts`,
       },
     },
     {
@@ -31,10 +29,16 @@ module.exports = {
       resolve: `gatsby-transformer-remark`,
       options: {
         plugins: [
+          `gatsby-remark-copy-linked-files`,
           {
             resolve: `gatsby-remark-images`,
             options: {
-              maxWidth: 630,
+              maxWidth: 1200,
+              withWebp: true,
+              showCaptions: true,
+              quality: 90,
+              wrapperStyle: fluidResult => `flex:${_.round(fluidResult.aspectRatio, 2)};`,
+
             },
           },
           {
@@ -43,9 +47,23 @@ module.exports = {
               wrapperStyle: `margin-bottom: 1.0725rem`,
             },
           },
+          {
+            resolve: `gatsby-remark-autolink-headers`,
+            options: {
+              className: 'post-toc-anchor',
+            },
+          },
           `gatsby-remark-prismjs`,
           `gatsby-remark-copy-linked-files`,
           `gatsby-remark-smartypants`,
+          {
+            resolve: 'qards-transformer-external-links',
+            options: {
+              target        : '_blank',
+              rel           : ['nofollow', 'noopener', 'noreferrer'],
+              bypassNofollow: ['surron.parts'],
+            },
+          }
         ],
       },
     },
@@ -105,7 +123,7 @@ module.exports = {
               }
             `,
             output: "/rss.xml",
-            title: "Gatsby Starter Blog RSS Feed",
+            title: "Sur-Ron parts and upgrades reviews RSS Feed",
           },
         ],
       },
@@ -113,8 +131,8 @@ module.exports = {
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
-        name: `Gatsby Starter Blog`,
-        short_name: `GatsbyJS`,
+        name: `Sur-Ron parts and upgrades reviews`,
+        short_name: `Sur-Ron parts`,
         start_url: `/`,
         background_color: `#ffffff`,
         // This will impact how browsers show your PWA/website
