@@ -1,5 +1,5 @@
 [build]
-    command = "gatsby build"
-    publish = "public"
-[dev]
-    command = "gatsby develop"
+  publish = "public"
+  command = "npm run build"
+[build.environment]
+  NODE_ENV = "production"
