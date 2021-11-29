@@ -143,6 +143,6 @@ module.exports = {
       },
     },
     `gatsby-plugin-react-helmet`,
-    `gatsby-plugin-advanced-sitemap`
+    `gatsby-plugin-sitemap`
   ],
 }
