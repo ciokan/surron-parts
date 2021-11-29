@@ -143,6 +143,28 @@ module.exports = {
       },
     },
     `gatsby-plugin-react-helmet`,
-    `gatsby-plugin-advanced-sitemap`
+    // this (optional) plugin enables Progressive Web App + Offline functionality
+    // To learn more, visit: https://gatsby.dev/offline
+    // `gatsby-plugin-offline`,
+    {
+      resolve: `gatsby-plugin-sitemap`,
+      options: {
+        exclude: ['/admin', '/confirmed'],
+        query: /* ✂️ */,
+        serialize: ({ site, allSitePage }) => {
+          return allSitePage.edges
+            .filter(({ node }) => (
+              node.context.isCanonical !== false
+            ))
+            .map(({ node }) => {
+              return {
+                url: site.siteMetadata.siteUrl + node.path,
+                changefreq: 'daily',
+                priority: 0.7,
+              };
+            });
+        },
+      },
+    },
   ],
 }

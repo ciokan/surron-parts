@@ -143,6 +143,25 @@ module.exports = {
       },
     },
     `gatsby-plugin-react-helmet`,
-    `gatsby-plugin-advanced-sitemap`
+    {
+      resolve: `gatsby-plugin-sitemap`,
+      options: {
+        exclude: ['/admin', '/confirmed'],
+        query: /* ✂️ */,
+        serialize: ({ site, allSitePage }) => {
+          return allSitePage.edges
+            .filter(({ node }) => (
+              node.context.isCanonical !== false
+            ))
+            .map(({ node }) => {
+              return {
+                url: site.siteMetadata.siteUrl + node.path,
+                changefreq: 'daily',
+                priority: 0.7,
+              };
+            });
+        },
+      },
+    },
   ],
 }
