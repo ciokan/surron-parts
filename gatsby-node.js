@@ -132,6 +132,16 @@ exports.createSchemaCustomization = ({ actions, schema }) => {
             }
           });
 
+          entries.forEach(e => {
+            if (e.html == null) {
+              // for the sake of this demo we just exit here
+              // as it's no use going further - point proven
+              // since the html field is null
+              console.error(`failed to grab html for: ${e.frontmatter.title}`);
+              process.exit(1);
+            }
+          })
+
           return entries;
         }
       }
