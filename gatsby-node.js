@@ -6,7 +6,6 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
 
   // Define a template for blog post
   const blogPost = path.resolve(`./src/templates/blog-post.js`)
-
   // Get all markdown blog posts sorted by date
   const result = await graphql(
     `
@@ -20,6 +19,8 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
             fields {
               slug
             }
+            html
+            htmlAst
           }
         }
       }
@@ -39,6 +40,10 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
     posts.forEach((post, index) => {
       const previousPostId = index === 0 ? null : posts[index - 1].id
       const nextPostId = index === posts.length - 1 ? null : posts[index + 1].id
+
+      // we have html here which runs before our create schema
+      // but it disappears when we query for it down below
+      console.log(post.html);
 
       createPage({
         path: post.fields.slug,
@@ -149,29 +154,39 @@ exports.createSchemaCustomization = ({ actions, schema }) => {
   }));
 }
 
-exports.createResolvers = ({ createResolvers }) => {
-  createResolvers({
-    // Query: {
-    //   allPosts: {
-    //     type: ["Post"],
-    //     args: { limit: `Int`, skip: `Int` },
-    //     resolve: async (source, args, context, info) => {
-    //       const { entries } = await context.nodeModel.findAll({
-    //         type: "MarkdownRemark",
-    //         query: {
-    //           limit: args.limit,
-    //           skip: args.skip,
-    //           filter: {
-    //             fileAbsolutePath: {
-    //               regex: "//content/posts//"
-    //             }
-    //           }
-    //         }
-    //       });
+// exports.createResolvers = ({ createResolvers }) => {
+//   createResolvers({
+//     Query: {
+//       allPosts: {
+//         type: ["Post"],
+//         args: { limit: `Int`, skip: `Int` },
+//         resolve: async (source, args, context, info) => {
+//           const { entries } = await context.nodeModel.findAll({
+//             type: "MarkdownRemark",
+//             query: {
+//               limit: args.limit,
+//               skip: args.skip,
+//               filter: {
+//                 fileAbsolutePath: {
+//                   regex: "//content/posts//"
+//                 }
+//               }
+//             }
+//           });
 
-    //       return entries;
-    //     }
-    //   }
-    // }
-  });
-}
+//           entries.forEach(e => {
+//             if (e.html == null) {
+//               // for the sake of this demo we just exit here
+//               // as it's no use going further - point proven
+//               // since the html field is null
+//               console.error(`failed to grab html for: ${e.frontmatter.title}`);
+//               process.exit(1);
+//             }
+//           })
+
+//           return entries;
+//         }
+//       }
+//     }
+//   });
+// }
