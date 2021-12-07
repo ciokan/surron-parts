@@ -5,7 +5,7 @@ import Layout from "../components/layout"
 import Seo from "../components/seo"
 
 const BlogPostTemplate = ({ data, location }) => {
-  const post = data.markdownRemark
+  const post = data.post
   const siteTitle = data.site.siteMetadata?.title || `Title`
   const { previous, next } = data
 
@@ -73,9 +73,9 @@ export const pageQuery = graphql`
         title
       }
     }
-    markdownRemark(id: { eq: $id }) {
+    post: markdownRemark(id: { eq: $id }) {
       id
-      excerpt(pruneLength: 160)
+      excerpt
       html
       frontmatter {
         title
